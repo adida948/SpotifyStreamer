@@ -1,6 +1,7 @@
 package com.danilocarrion.spotifystreamer;
 
 import android.content.Context;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,14 @@ import kaaes.spotify.webapi.android.models.Track;
 /**
  * Created by dcarrion on 7/13/2015.
  */
-public class TrackAdapter extends BaseAdapter{
+public class TrackAdapter extends BaseAdapter {
     Context mContext;
     LayoutInflater mInflater;
     ArrayList<Track> mTracksArray;
 
-    public TrackAdapter(Context context,LayoutInflater inflater) {
-        mContext=context;
-        mInflater =inflater;
+    public TrackAdapter(Context context, LayoutInflater inflater) {
+        mContext = context;
+        mInflater = inflater;
         mTracksArray = new ArrayList<>();
     }
 
@@ -35,7 +36,7 @@ public class TrackAdapter extends BaseAdapter{
      * @return Count of items.
      */
     @Override
-    public int getCount()  {
+    public int getCount() {
         return mTracksArray.size();
     }
 
@@ -85,7 +86,7 @@ public class TrackAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
-       // check if the view already exists
+        // check if the view already exists
         // if so, no need to inflate and findViewById again!
         if (convertView == null) {
 
@@ -109,17 +110,25 @@ public class TrackAdapter extends BaseAdapter{
         }
 
         // Get the current track's data from ArrayList
-        Track trackObject = (Track)getItem(position);
+        Track trackObject = (Track) getItem(position);
 
         // See if there is an image for the Object
         if (!trackObject.album.images.isEmpty()) {
 
-            // Construct the image URL (specific to API) get The second biggest piicture
-            String track_ImageURL = trackObject.album.images.get(trackObject.album.images.size()-2).url;
+            // Construct the image URL (specific to API) get The second biggest picture
+            String track_ImageURL = trackObject.album.images.get(trackObject.album.images.size() - 2).url;
 
-            // Use Picasso to load the image
+            //Verify that the URL is legitimate
+            boolean isValidURL = Patterns.WEB_URL.matcher(track_ImageURL).matches();
+
+            // Use Picasso to load the image if it is a valid URL. If not, display default image.
             // Temporarily have a placeholder in case it's slow to load
-            Picasso.with(mContext).load(track_ImageURL).placeholder(R.mipmap.ic_launcher).into(holder.thumbnailImageView);
+            if (isValidURL)
+                Picasso.with(mContext).load(track_ImageURL).placeholder(R.mipmap.ic_launcher).into(holder.thumbnailImageView);
+            else
+                holder.thumbnailImageView.setImageResource(R.mipmap.ic_launcher);
+
+
         } else {
 
             // If there is no cover ID in the object, use a placeholder
@@ -127,10 +136,10 @@ public class TrackAdapter extends BaseAdapter{
         }
 
         // Grab track name from ArrayList
-        String trackName = "";
+        String trackName = " ";
 
         //Grab album name from object
-        String albumName = "";
+        String albumName = " ";
 
         if (trackObject.name != null) {
             trackName = trackObject.name;
@@ -141,7 +150,6 @@ public class TrackAdapter extends BaseAdapter{
             holder.albumNameTextView.setText(albumName);
 
         }
-
         return convertView;
     }
 
