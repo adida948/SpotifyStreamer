@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/track_img_thumbnail"
@@ -11,24 +9,41 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:scaleType="centerInside"
-        android:layout_marginBottom="25dp"/>
+        android:layout_marginBottom="25dp"
+        android:scaleType="centerInside" />
 
-    <TextView
-        android:id="@+id/album_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/track_img_thumbnail"
-        android:layout_marginLeft="25dp"
-        android:layout_marginBottom="3dp"
-        android:layout_toRightOf="@id/track_img_thumbnail"
-        android:layout_centerVertical="true"/>
 
-    <TextView
-        android:id="@+id/track_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/album_title"
-        android:layout_below="@id/album_title"
-        />
+<!--
+    Made use of another layout to center the track title and album.
+-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/track_img_thumbnail">
+
+        <TextView
+            android:id="@+id/track_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:fontFamily="sans-serif-light"
+            android:textAppearance="?android:textAppearanceSmall"
+            />
+
+        <TextView
+            android:id="@+id/album_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/track_name"
+            android:layout_below="@id/track_name"
+            android:layout_marginRight="25dp"
+            android:fontFamily="sans-serif-light"
+            android:textAppearance="?android:textAppearanceSmall"
+            />
+
+
+    </RelativeLayout>
+
 </RelativeLayout>
