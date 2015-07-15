@@ -1,6 +1,7 @@
 package com.danilocarrion.spotifystreamer;
 
 import android.content.Context;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.Image;
 
 /**
  * Created by dcarrion on 7/13/2015.
@@ -51,7 +51,6 @@ public class ArtistAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return mArtistArray.get(position);
-
     }
 
     /**
@@ -98,15 +97,11 @@ public class ArtistAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.thumbnailImageView = (ImageView) convertView.findViewById(R.id.img_thumbnail);
             holder.artistTextView = (TextView) convertView.findViewById(R.id.text_artist);
-            holder.userID = (TextView) convertView.findViewById(R.id.artist_id);
-
 
             // hang onto this holder for future recycling
             convertView.setTag(holder);
         } else {
-
-            // skip all the expensive inflation/findViewById
-            // and just get the holder below
+            // skip all the expensive inflation/findViewById  and just get the holder below
             holder = (ViewHolder) convertView.getTag();
         }
 
@@ -116,45 +111,36 @@ public class ArtistAdapter extends BaseAdapter {
 
         // See if there is an image for the Object
         if (!artistObject.images.isEmpty()) {
+            // Construct the image URL (specific to API). Get the second most smallest image available.
+            String imageURL = artistObject.images.get(artistObject.images.size() - 2).url;
 
-            // Construct the image URL (specific to API)//Ge the second most smallest image avaiable.
-            Image imageURL = artistObject.images.get(artistObject.images.size() - 2);
+            //Verify that the URL is legitimate
+            boolean isValidURL = Patterns.WEB_URL.matcher(imageURL).matches();
 
-            // Use Picasso to load the image
-            // Temporarily have a android image as a placeholder in case it's slow to load
-            Picasso.with(mContext).load(imageURL.url).placeholder(R.mipmap.ic_launcher).into(holder.thumbnailImageView);
+            // Use Picasso to load the image if it is a valid URL. If not, display default image.
+            // Temporarily have a placeholder in case it's slow to load
+            if (isValidURL)
+                Picasso.with(mContext).load(imageURL).placeholder(R.mipmap.ic_launcher).into(holder.thumbnailImageView);
+            else
+                holder.thumbnailImageView.setImageResource(R.mipmap.ic_launcher);
         } else {
 
             // If there is no cover ID in the object, use a placeholder
             holder.thumbnailImageView.setImageResource(R.mipmap.ic_launcher);
         }
 
-        // Grab artist from ArrayList
-        String artistName = "";
+        //  artist/artistId variables to store  from ArrayList
+        String artistName, artistId = "";
 
-        //Grab artist ID from ArrayList
-        String artistId = "";
-
+        //If artist is not empty, grab its name and id
         if (artistObject.name != null) {
             artistName = artistObject.name;
             artistId = artistObject.id;
 
             // Send these Strings to the TextViews for display
             holder.artistTextView.setText(artistName);
-
-            holder.userID.setText(artistId);
         }
-
-
         return convertView;
-    }
-
-    // this is used so you only ever have to do
-    // inflation and finding by ID once ever per View
-    private static class ViewHolder {
-        public ImageView thumbnailImageView;
-        public TextView artistTextView;
-        public TextView userID;
     }
 
     public void updateData(ArrayList<Artist> artistArray) {
@@ -163,4 +149,10 @@ public class ArtistAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    // this is used so you only ever have to do
+    // inflation and finding by ID once ever per View
+    private static class ViewHolder {
+        public ImageView thumbnailImageView;
+        public TextView artistTextView;
+    }
 }
