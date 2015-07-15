@@ -3,10 +3,9 @@ package com.danilocarrion.spotifystreamer;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,11 +21,13 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class TopTracksActivity extends ActionBarActivity  {
+public class TopTracksActivity extends ActionBarActivity {
     String artistID = "";
+    String artistName = "";
     ListView trackListView;
     ProgressDialog mDialog;
     TrackAdapter mTracksAdapter;
+    ActionBar mActionBar;
 
 
     @Override
@@ -34,10 +35,10 @@ public class TopTracksActivity extends ActionBarActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_tracks);
 
+
         //Enable up button for more navegation options
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         trackListView = (ListView) findViewById(R.id.tracks_listView);
-
 
         //Create a TrackAdapter for the ListView
         mTracksAdapter = new TrackAdapter(this, getLayoutInflater());
@@ -47,47 +48,34 @@ public class TopTracksActivity extends ActionBarActivity  {
         //Get ID from Intent
         artistID = this.getIntent().getExtras().getString("artistId");
 
+        //Get artist name from Intent
+        artistName = this.getIntent().getExtras().getString("artistName");
+
+        //Set Subtitle in Action Bar to resemble the mock.
+        mActionBar = getSupportActionBar();
+        mActionBar.setSubtitle(artistName);
+
 
         //Send all the top tracks to the adapter with the Artist ID from the previous activity.
         queryTopTracks(artistID);
 
+
+
         //Set Dialog
         mDialog = new ProgressDialog(this);
-        mDialog.setMessage("Searching for Artist");
+        mDialog.setMessage("Searching for Tracks");
         mDialog.setCancelable(false);
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
+    //Method used to get result back from Spofity API
     private void queryTopTracks(String searchTracksId) {
 
         RetrieveData runTopTracks = new RetrieveData();
         runTopTracks.execute(searchTracksId);
 
     }
-
 
 
     private class RetrieveData extends AsyncTask<String, Void, Void> {
@@ -104,7 +92,8 @@ public class TopTracksActivity extends ActionBarActivity  {
                 }
             });
 
-            String artistId = params[0];
+            //Making calls to Spotify API by using the Wrapper.
+            String artistIdFromIntent = params[0];
             SpotifyApi api = new SpotifyApi();
             SpotifyService spotify = api.getService();
 
@@ -113,7 +102,7 @@ public class TopTracksActivity extends ActionBarActivity  {
             countryCode.put("country", "US");
 
 
-            spotify.getArtistTopTrack(artistId, countryCode, new Callback<Tracks>() {
+            spotify.getArtistTopTrack(artistIdFromIntent, countryCode, new Callback<Tracks>() {
                 /**
                  * Successful HTTP response.
                  *
@@ -148,7 +137,7 @@ public class TopTracksActivity extends ActionBarActivity  {
                         String albumName = element.album.name;
                         String imageUrl = element.album.images.get(0).url;
 
-                        Log.v("album success", trackName + " " + albumName + "\n " + imageUrl);
+                        Log.v("Track Success", trackName + " " + albumName + "\n " + imageUrl);
                     }
 
 
@@ -169,7 +158,7 @@ public class TopTracksActivity extends ActionBarActivity  {
                             mDialog.dismiss();
                         }
                     });
-                    Log.d("Album failure", error.toString());
+                    Log.d("Track failure", error.toString());
                     runOnUiThread(new Runnable() {
                         public void run() {
 
@@ -179,55 +168,6 @@ public class TopTracksActivity extends ActionBarActivity  {
                     });
                 }
             });
-
-/*
-            spotify.searchTracks(artistId, new Callback<TracksPager>(){
-
-
-                */
-/**
- * Successful HTTP response.
- *
- * @param tracksPager
- * @param response
- *//*
-
-                @Override
-                public void success(TracksPager tracksPager, Response response) {
-
-                    runOnUiThread(new Runnable() {public void run(){ mDialog.dismiss();}});
-                    TracksPager results = tracksPager;
-
-                    ArrayList <Track> listOfTracks = (ArrayList)results.tracks.items;
-
-                    if(listOfTracks.isEmpty()){
-                        runOnUiThread(new Runnable() {public void run(){
-
-                            Toast.makeText(getApplicationContext(), "No Artists found.\n Please try again.", Toast.LENGTH_LONG).show();
-
-                        }});}
-
-                    for (Track element : listOfTracks) {
-                        String name = element.name;
-                        String albumName = element.album.name;
-                        Log.v("album success", name + " " + albumName);
-                    }
-
-                   // mArtistAdapter.updateData(listOfArtists);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    runOnUiThread(new Runnable() {public void run(){ mDialog.dismiss();}});
-
-                    Log.d("Album failure", error.toString());
-                }
-
-
-
-            });
-*/
-
 
             return null;
         }
