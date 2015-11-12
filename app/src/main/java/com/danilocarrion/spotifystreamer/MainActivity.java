@@ -149,7 +149,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
             String artistNames = params[0];
 
-            //Making callsto Spotify API by using the Wrapper.
+            //Making callsto Spotify APIby using the Wrapper.
             SpotifyApi api = new SpotifyApi();
             SpotifyService spotify = api.getService();
             spotify.searchArtists(artistNames, new Callback<ArtistsPager>() {
