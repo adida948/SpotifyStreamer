@@ -155,7 +155,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             spotify.searchArtists(artistNames, new Callback<ArtistsPager>() {
 
                 /**
-                 * Successful HTTP response.
+                 * Successful    HTTP response.
                  *
                  * @param artistsPager
                  * @param response
