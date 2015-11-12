@@ -2,6 +2,16 @@
 Spotify app to get top 10 tracks and display them.
 
 Resources Used:
+
+**********
+FORUM for QUESTIONS/ANSWERS: https://discussions.udacity.com/c/nd801-2015-05-28/p1-spotify-streamer-stage-1
+
+Spotify Wrapper: https://github.com/kaaes/spotify-web-api-android/blob/master/README.md
+
+Spotify Stagea 1 Assigment Rubric: https://docs.google.com/document/d/18GcAc70wUlllHUDoAAVF36fX9YSkuMyX07OWVQ2tDWI/pub?embedded=true
+
+https://docs.google.com/document/d/1Q7b2dIt18r2pXqDhE_TsgZ5UkfzbybkGlmKfyoqpegc/pub?embedded=true
+*********
 Spotify APi -Get Artist top tracks:
 https://developer.spotify.com/web-api/get-artists-top-tracks/
 https://api.spotify.com/v1/search?type=artist&q=beyonce
@@ -30,3 +40,5 @@ Solution to save data in App Submitted[Need to find a better way]:
 http://stackoverflow.com/questions/7818717/why-not-use-always-androidconfigchanges-keyboardhiddenorientation
 
 Create SearchView: http://sampleprogramz.com/android/searchview.php
+
+Do it
