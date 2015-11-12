@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         // Set the ListView to use the ArrayAdapter
         mainListView.setAdapter(mArtistAdapter);
 
-        // Create a dialog to show waiting for Artist
+        // Create adialog to show waiting for Artist
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("Searching for Artist");
         mDialog.setCancelable(false);
