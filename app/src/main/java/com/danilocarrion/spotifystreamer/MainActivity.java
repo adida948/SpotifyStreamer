@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         //Access the SearchView
         mSearchView = (SearchView) findViewById(R.id.searchView);
 
-        //Access the listView
+        //Access the listView Now
         mainListView = (ListView) findViewById(R.id.main_listview);
 
         // Set this activity to react to the items being pressed
